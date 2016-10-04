@@ -475,7 +475,11 @@ class Thumbnailer(File):
             names.append(transparent_name)
 
         for filename in names:
-            exists = self.thumbnail_exists(filename)
+            from botocore.exceptions import ClientError
+            try:
+                exists = self.thumbnail_exists(filename)
+            except ClientError:
+                return None
             if exists:
                 thumbnail_file = ThumbnailFile(
                     name=filename, storage=self.thumbnail_storage,
